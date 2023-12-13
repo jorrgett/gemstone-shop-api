@@ -38,7 +38,7 @@ class Gem(SQLModel, table=True):
     id: Optional[int] = Field(primary_key=True)
     price: float
     available: bool = True
-    gem_type: GemTypes = GemTypes.DIAMOND
+    gem_type: GemTypes
     gem_properties_id: Optional[int] = Field(default=None, foreign_key='gemproperties.id')
     gem_properties: Optional[GemProperties] = Relationship(back_populates='gem')
     # seller_id: Optional[int] = Field(default=None, foreign_key='user.id')
