@@ -14,7 +14,7 @@ def select_all_gems(lte, gte, type):
             statement = statement.where(Gem.price >= gte)
         if type:
             statement = statement.where(Gem.gem_type.in_(type)).order_by(Gem.gem_type).order_by(-Gem.price).order_by(None)
-            
+
         result = session.exec(statement)
         res = []
         for gem, props in result:
@@ -26,6 +26,9 @@ def select_gem(id):
         statement = select(Gem, GemProperties).join(GemProperties)
         statement = statement.where(Gem.id==id)
         result = session.exec(statement)
-        return result.first()
+        res = []
+        for gem, props in result:
+            res.append({'gem': gem, 'props': props})
+        return res
 
 # select_gems()
