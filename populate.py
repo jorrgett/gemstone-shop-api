@@ -32,6 +32,8 @@ def calculate_gem_price(gem, gem_pr):
         multiplier = color_multiplier[gem_pr.color]
         price *= multiplier
 
+    price = round(price, 2)
+
     return price
 
 def create_gem_props():
@@ -62,4 +64,4 @@ def create_gems_db():
         session.add_all(gems)
         session.commit()
 
-# create_gems_db()
+create_gems_db()
