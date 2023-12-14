@@ -6,6 +6,6 @@ class CreateGem(BaseModel):
     gem_type: Optional[GemTypes]
 
 class CreateGemProperties(BaseModel):
-    size: float
+    size: float = Field(..., gt=0)
     clarity: GemClarity
     color: GemColor
