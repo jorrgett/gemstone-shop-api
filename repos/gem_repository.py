@@ -1,3 +1,4 @@
+from typing import Dict
 from db.db import engine
 from models.gem_models import Gem, GemProperties
 from sqlmodel import Session, select
@@ -33,7 +34,7 @@ def select_gem(id):
             res.append({'gem': gem, 'props': props})
         return res
     
-def create_gem(gem_pr: CreateGemProperties, gem: CreateGem):
+def create_gem(gem_pr: CreateGemProperties, gem: CreateGem) -> Dict[str, any]:
     with Session(engine) as session:
         gem_properties = GemProperties(size=gem_pr.size, clarity=gem_pr.clarity, color=gem_pr.color)
         session.add(gem_properties)
@@ -45,6 +46,10 @@ def create_gem(gem_pr: CreateGemProperties, gem: CreateGem):
         session.add(gem_)
         session.commit()
 
-        return gem_
+        # Recuperar la gema y sus propiedades después de ser agregada y confirmada
+        session.refresh(gem_)
+        session.refresh(gem_properties)
+
+        return {'gem': gem_, 'props': gem_properties}
 
 # select_gems()

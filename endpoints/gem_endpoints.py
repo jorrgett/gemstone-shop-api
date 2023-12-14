@@ -3,7 +3,7 @@ from fastapi import APIRouter, HTTPException, Query
 from models.gem_models import GemTypes
 from repos.gem_repository import *
 from starlette.responses import JSONResponse
-from starlette.status import HTTP_204_NO_CONTENT, HTTP_404_NOT_FOUND, HTTP_401_UNAUTHORIZED
+from starlette.status import HTTP_204_NO_CONTENT, HTTP_404_NOT_FOUND, HTTP_401_UNAUTHORIZED, HTTP_400_BAD_REQUEST
 
 gem_router = APIRouter()
 
@@ -75,10 +75,53 @@ def gem(id: int):
         return JSONResponse(content=error_response, status_code=HTTP_404_NOT_FOUND)
     return gem_found
 
-@gem_router.post('/gems', tags=['Gems'])
-def create_gems(gem_pr: CreateGemProperties, gem: CreateGem):
+@gem_router.post('/gems', tags=['Gems'], summary="Create a new gem")
+def create_gems(
+    gem_pr: CreateGemProperties,
+    gem: CreateGem
+):
+    """
+    Create a new gem.
+
+    Parameters:
+    - **gem_pr**: The properties of the gem.
+    - **gem**: The details of the gem.
+
+    Raises:
+    - **HTTPException 400 (Bad Request)**: If there is an issue creating the gem.
+
+    Returns:
+    - The created gem and its properties.
+
+    Response:
+    ```json
+    {
+        "gem_pr": {
+            "size": 4.4,       # Size of the gem in carats
+            "clarity": 3,      # Clarity rating of the gem (SI, VS, VVS, FL)
+            "color": "G"       # Color grade of the gem (D, E, G, F, H, I)
+        },
+        "gem": {
+            "available": true,       # Availability status of the gem
+            "gem_type": "RUBY",      # Type of gem (e.g., RUBY, DIAMOND, EMERALD, etc.)
+        }
+    }
+    ```
+    - **Clarity Rating:**
+        - 1 (SI): Slightly Included
+        - 2 (VS): Very Slightly Included
+        - 3 (VVS): Very, Very Slightly Included
+        - 4 (FL): Flawless
+    - **Color Grade:**
+        - 'D': Colorless ++
+        - 'E': Colorless +
+        - 'F': Colorless
+        - 'G': Near-Colorless 
+        - 'H': Near-Colorless -
+        - 'I': Near-Colorless --
+    """
     try:
         created_gem = create_gem(gem_pr, gem)
         return created_gem
     except Exception as e:
-        raise HTTPException(status_code=500, detail='Whoops, invalid parameters have been sent to database')
+        raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail='Invalid parameters sent to the database')
