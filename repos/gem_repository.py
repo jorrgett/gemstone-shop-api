@@ -1,6 +1,8 @@
 from db.db import engine
 from models.gem_models import Gem, GemProperties
 from sqlmodel import Session, select
+from populate import calculate_gem_price
+from schemas.gem_schemas import *
 
 def select_all_gems(lte, gte, type):
     with Session(engine) as session:
@@ -30,5 +32,19 @@ def select_gem(id):
         for gem, props in result:
             res.append({'gem': gem, 'props': props})
         return res
+    
+def create_gem(gem_pr: CreateGemProperties, gem: CreateGem):
+    with Session(engine) as session:
+        gem_properties = GemProperties(size=gem_pr.size, clarity=gem_pr.clarity, color=gem_pr.color)
+        session.add(gem_properties)
+        session.commit()
+
+        price = calculate_gem_price(gem, gem_pr)
+
+        gem_ = Gem(price=price, available=gem.available, gem_type=gem.gem_type, gem_properties=gem_properties)
+        session.add(gem_)
+        session.commit()
+
+        return gem_
 
 # select_gems()

@@ -1,10 +1,9 @@
 from typing import List, Optional
-from fastapi import APIRouter, Query
+from fastapi import APIRouter, HTTPException, Query
 from models.gem_models import GemTypes
 from repos.gem_repository import *
 from starlette.responses import JSONResponse
 from starlette.status import HTTP_204_NO_CONTENT, HTTP_404_NOT_FOUND, HTTP_401_UNAUTHORIZED
-from db.db import session
 
 gem_router = APIRouter()
 
@@ -75,3 +74,11 @@ def gem(id: int):
         error_response = {"detail": "Gem not found"}
         return JSONResponse(content=error_response, status_code=HTTP_404_NOT_FOUND)
     return gem_found
+
+@gem_router.post('/gems', tags=['Gems'])
+def create_gems(gem_pr: CreateGemProperties, gem: CreateGem):
+    try:
+        created_gem = create_gem(gem_pr, gem)
+        return created_gem
+    except Exception as e:
+        raise HTTPException(status_code=500, detail='Whoops, invalid parameters have been sent to database')
