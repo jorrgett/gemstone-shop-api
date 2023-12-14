@@ -14,9 +14,9 @@ color_multiplier = {
 
 def calculate_gem_price(gem, gem_pr):
     price = 1000
-    if gem.gem_type == 'Ruby':
+    if gem.gem_type == 'RUBY':
         price = 400
-    elif gem.gem_type == 'Emerald':
+    elif gem.gem_type == 'EMERALD':
         price = 650
 
     if gem_pr.clarity == 1:
@@ -28,7 +28,7 @@ def calculate_gem_price(gem, gem_pr):
 
     price = price * (gem_pr.size**3)
 
-    if gem.gem_type == 'Diamond':
+    if gem.gem_type == 'DIAMOND':
         multiplier = color_multiplier[gem_pr.color]
         price *= multiplier
 
