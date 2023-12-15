@@ -1,5 +1,4 @@
 from typing import Dict
-
 from fastapi.encoders import jsonable_encoder
 from db.db import engine
 from models.gem_models import Gem, GemProperties
@@ -64,5 +63,13 @@ def updating_gem(id, gem):
         session.commit()
         session.refresh(gem_found)
         return gem_found
+    
+def deleting_gem(id):
+    with Session(engine) as session:
+        gem_found = session.get(Gem, id)
+        session.delete(gem_found)
+        session.commit()
+
+        return {"detail": "Gem deleted from the database"}
 
 # select_gems()

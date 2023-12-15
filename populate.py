@@ -54,12 +54,12 @@ def create_gem(gem_p):
 
 def create_gems_db():
     #gem_p = create_gem_props()
-    gem_ps = [create_gem_props() for x in range(400)]
+    gem_ps = [create_gem_props() for x in range(100)]
     print(gem_ps)
     with Session(engine) as session:
         session.add_all(gem_ps)
         session.commit()
-        gems = [create_gem(gem_ps[x]) for x in range(400)]
+        gems = [create_gem(gem_ps[x]) for x in range(100)]
         # g = create_gem(gem_p.id)
         session.add_all(gems)
         session.commit()
