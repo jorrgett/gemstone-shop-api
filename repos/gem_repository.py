@@ -1,4 +1,6 @@
 from typing import Dict
+
+from fastapi.encoders import jsonable_encoder
 from db.db import engine
 from models.gem_models import Gem, GemProperties
 from sqlmodel import Session, select
@@ -51,5 +53,16 @@ def create_gem(gem_pr: CreateGemProperties, gem: CreateGem) -> Dict[str, any]:
         session.refresh(gem_properties)
 
         return {'gem': gem_, 'props': gem_properties}
+    
+def updating_gem(id, gem):
+    with Session(engine) as session:
+        gem_found = session.get(Gem, id)
+        update_item_encoded = jsonable_encoder(gem)
+        update_item_encoded.pop('id', None)
+        for key, val in update_item_encoded.items():
+            gem_found.__setattr__(key, val)
+        session.commit()
+        session.refresh(gem_found)
+        return gem_found
 
 # select_gems()
