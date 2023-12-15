@@ -9,3 +9,6 @@ class CreateGemProperties(BaseModel):
     size: float = Field(..., gt=0)
     clarity: GemClarity
     color: GemColor
+
+class UpdateGem(BaseModel):
+    available: bool

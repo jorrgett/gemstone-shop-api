@@ -11,7 +11,7 @@ gem_router = APIRouter()
 def greet():
     return 'Hello production'
 
-@gem_router.get('/gems', tags=['Gems'], summary="Retrieve gems based on specified criteria")
+@gem_router.get('/gems/all', tags=['Gems'], summary="Retrieve gems based on specified criteria")
 def gems(
     lte: Optional[int] = Query(None, description="Filter gems with a value less than or equal to this"),
     gte: Optional[int] = Query(None, description="Filter gems with a value greater than or equal to this"),
@@ -75,7 +75,7 @@ def gem(id: int):
         return JSONResponse(content=error_response, status_code=HTTP_404_NOT_FOUND)
     return gem_found
 
-@gem_router.post('/gems', tags=['Gems'], summary="Create a new gem")
+@gem_router.post('/gems/create', tags=['Gems'], summary="Create a new gem")
 def create_gems(
     gem_pr: CreateGemProperties,
     gem: CreateGem
@@ -123,5 +123,57 @@ def create_gems(
     try:
         created_gem = create_gem(gem_pr, gem)
         return created_gem
+    except Exception as e:
+        raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail='Invalid parameters sent to the database')
+
+@gem_router.put('/gems/{id}', tags=['Gems'], summary="Update Gem Availability")
+def update_gem(id: int, gem: UpdateGem):
+    """
+    Update the availability status of a gem identified by its unique identifier.
+
+    Parameters:
+    - **id**: The unique identifier of the gem.
+    - **gem**: The details to be updated for the gem's availability.
+
+    Request Body:
+    ```json
+    {
+        "available": true
+    }
+    ```
+
+    Raises:
+    - **HTTPException 400 (Bad Request)**: If there is an issue updating the gem.
+    - **HTTPException 404 (Not Found)**: If the gem with the specified ID is not found.
+
+    Returns:
+    - The updated details of the gem.
+
+    Example:
+    ```http
+    PUT /gems/398
+    ```
+
+    Request Body:
+    ```json
+    {
+        "available": false
+    }
+    ```
+
+    Response:
+    ```json
+    {
+        "gem_type": "RUBY",
+        "available": false,
+        "id": 398,
+        "price": 129600,
+        "gem_properties_id": 398
+    }
+    ```
+    """
+    try:
+        gem_found_ = updating_gem(id, gem)
+        return gem_found_
     except Exception as e:
         raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail='Invalid parameters sent to the database')
