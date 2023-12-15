@@ -3,7 +3,7 @@ from fastapi import APIRouter, HTTPException, Query
 from models.gem_models import GemTypes
 from repos.gem_repository import *
 from starlette.responses import JSONResponse
-from starlette.status import HTTP_204_NO_CONTENT, HTTP_404_NOT_FOUND, HTTP_401_UNAUTHORIZED, HTTP_400_BAD_REQUEST
+from starlette.status import HTTP_204_NO_CONTENT, HTTP_404_NOT_FOUND, HTTP_400_BAD_REQUEST, HTTP_200_OK
 
 gem_router = APIRouter()
 
@@ -175,5 +175,36 @@ def update_gem(id: int, gem: UpdateGem):
     try:
         gem_found_ = updating_gem(id, gem)
         return gem_found_
+    except Exception as e:
+        raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail='Invalid parameters sent to the database')
+
+@gem_router.delete('/gems/{id}',status_code=HTTP_204_NO_CONTENT, tags=['Gems'])
+def delete_gem(id: int):
+    """
+    Delete a gem identified by its unique identifier.
+
+    Parameters:
+    - **id**: The unique identifier of the gem to be deleted.
+
+    Raises:
+    - **HTTPException 404 (Not Found)**: If the gem with the specified ID is not found.
+    - **HTTPException 400 (Bad Request)**: If there is an issue deleting the gem.
+
+    Returns:
+    - No content (HTTP 204 No Content) if the deletion is successful.
+
+    Example:
+    ```http
+    DELETE /gems/123
+    ```
+
+    Response:
+    ```http
+    HTTP/1.1 204 No Content
+    ```
+    """
+    try:
+        delete = deleting_gem(id)
+        return delete
     except Exception as e:
         raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail='Invalid parameters sent to the database')
