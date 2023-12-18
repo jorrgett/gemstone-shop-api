@@ -1,3 +1,6 @@
 fastapi
 sqlmodel
 uvicorn
+alembic
+psycopg2
+SQLAlchemy
