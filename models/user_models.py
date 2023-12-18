@@ -7,7 +7,7 @@ class User(SQLModel, table=True):
     id: Optional[int] = Field(primary_key=True)
     username: str = Field(index=True)
     password: str = Field(max_length=256, min_length=6)
-    email: EmailStr
+    email: str
     created_at: datetime.datetime = datetime.datetime.now()
     is_seller: bool = False
 
@@ -15,7 +15,7 @@ class UserInput(SQLModel):
     username: str
     password: str = Field(max_length=256, min_length=6)
     password2: str
-    email: EmailStr
+    email: str
     is_seller: bool = False
 
     @validator('password2')
