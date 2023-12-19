@@ -4,3 +4,7 @@ uvicorn
 alembic
 psycopg2
 SQLAlchemy
+pyJWT
+bcrypt
+passlib
+pydantic[email]

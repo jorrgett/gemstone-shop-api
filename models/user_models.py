@@ -12,10 +12,10 @@ class User(SQLModel, table=True):
     is_seller: bool = False
 
 class UserInput(SQLModel):
-    username: str
-    password: str = Field(max_length=256, min_length=6)
-    password2: str
-    email: str
+    username: str = Field(default='user_example')
+    password: str = Field(max_length=256, min_length=6, default='password1234*')
+    password2: str = Field(default='password1234*')
+    email: str = Field(default='example@example.com')
     is_seller: bool = False
 
     @validator('password2')
