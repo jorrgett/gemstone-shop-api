@@ -3,7 +3,7 @@ from fastapi import APIRouter, HTTPException, Query
 from models.gem_models import GemTypes
 from repos.gem_repository import *
 from starlette.responses import JSONResponse
-from starlette.status import HTTP_204_NO_CONTENT, HTTP_404_NOT_FOUND, HTTP_400_BAD_REQUEST, HTTP_200_OK
+from starlette.status import HTTP_204_NO_CONTENT, HTTP_404_NOT_FOUND, HTTP_400_BAD_REQUEST
 
 gem_router = APIRouter()
 
