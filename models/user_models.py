@@ -25,5 +25,5 @@ class UserInput(SQLModel):
         return v
 
 class UserLogin(SQLModel):
-    username: str
-    password: str
+    username: str = Field(default='desarrollo_inver')
+    password: str = Field(default='desarrolloinver1234*')
