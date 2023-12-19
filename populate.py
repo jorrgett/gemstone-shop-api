@@ -36,6 +36,15 @@ def calculate_gem_price(gem, gem_pr):
 
     return price
 
+def generate_image(gem):
+    image = 'https://i.pinimg.com/736x/97/a6/b3/97a6b3eaab6c39dc2a9a922338bf8c88.jpg'
+    if gem.gem_type == 'EMERALD':
+        image = 'https://e7.pngegg.com/pngimages/1003/103/png-clipart-emerald-gemstone-beryl-emerald-rectangle-stone.png'
+    elif gem.gem_type == 'RUBY':
+        image = 'https://e7.pngegg.com/pngimages/181/855/png-clipart-ruby-ruby-thumbnail.png'
+
+    return image
+
 def create_gem_props():
     size = random.randint(3, 70)/10
     color = random.choice(GemColor.list())
@@ -46,7 +55,9 @@ def create_gem_props():
 
 def create_gem(gem_p):
     type = random.choice(GemTypes.list())
-    gem = Gem(price=1000, gem_properties_id=gem_p.id, gem_type=type)
+    gem = Gem(price=1000, gem_properties_id=gem_p.id, gem_type=type, image='https://i.pinimg.com/736x/97/a6/b3/97a6b3eaab6c39dc2a9a922338bf8c88.jpg')
+    image = generate_image(gem)
+    gem.image = image
     price = calculate_gem_price(gem, gem_p)
     price = round(price, 2)
     gem.price = price
@@ -54,14 +65,14 @@ def create_gem(gem_p):
 
 def create_gems_db():
     #gem_p = create_gem_props()
-    gem_ps = [create_gem_props() for x in range(100)]
+    gem_ps = [create_gem_props() for x in range(4)]
     print(gem_ps)
     with Session(engine) as session:
         session.add_all(gem_ps)
         session.commit()
-        gems = [create_gem(gem_ps[x]) for x in range(100)]
+        gems = [create_gem(gem_ps[x]) for x in range(4)]
         # g = create_gem(gem_p.id)
         session.add_all(gems)
         session.commit()
 
-# create_gems_db()
+create_gems_db()

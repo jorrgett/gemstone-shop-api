@@ -3,7 +3,7 @@ from fastapi.encoders import jsonable_encoder
 from db.db import engine
 from models.gem_models import Gem, GemProperties
 from sqlmodel import Session, select
-from populate import calculate_gem_price
+from populate import *
 from schemas.gem_schemas import *
 
 def select_all_gems(lte, gte, type):
@@ -42,8 +42,9 @@ def create_gem(gem_pr: CreateGemProperties, gem: CreateGem) -> Dict[str, any]:
         session.commit()
 
         price = calculate_gem_price(gem, gem_pr)
+        image = generate_image(gem)
 
-        gem_ = Gem(price=price, available=gem.available, gem_type=gem.gem_type, gem_properties=gem_properties)
+        gem_ = Gem(price=price, available=gem.available, gem_type=gem.gem_type, image=image, gem_properties=gem_properties)
         session.add(gem_)
         session.commit()
 
