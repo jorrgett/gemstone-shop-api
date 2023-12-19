@@ -1,21 +1,24 @@
 from typing import List, Optional
-from fastapi import APIRouter, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException, Query
+from auth.auth import AuthHandler
 from models.gem_models import GemTypes
 from repos.gem_repository import *
 from starlette.responses import JSONResponse
-from starlette.status import HTTP_204_NO_CONTENT, HTTP_404_NOT_FOUND, HTTP_400_BAD_REQUEST
+from starlette.status import HTTP_204_NO_CONTENT, HTTP_404_NOT_FOUND, HTTP_400_BAD_REQUEST, HTTP_401_UNAUTHORIZED
 
 gem_router = APIRouter()
+auth_handler = AuthHandler()
 
-@gem_router.get('/')
-def greet():
-    return 'Hello production'
+# @gem_router.get('/')
+# def greet():
+#     return 'Hello production'
 
 @gem_router.get('/gems/all', tags=['Gems'], summary="Retrieve gems based on specified criteria")
 def gems(
     lte: Optional[int] = Query(None, description="Filter gems with a value less than or equal to this"),
     gte: Optional[int] = Query(None, description="Filter gems with a value greater than or equal to this"),
-    type: List[Optional[GemTypes]] = Query(None, description="Filter gems by type (diamond, ruby, emerald)")
+    type: List[Optional[GemTypes]] = Query(None, description="Filter gems by type (diamond, ruby, emerald)"),
+    user=Depends(auth_handler.get_current_user)
 ):
     """
     Retrieve a list of gems based on specified criteria.
@@ -28,11 +31,14 @@ def gems(
     Returns:
     - List of gems that match the specified criteria.
     """
+    if not user.is_seller:
+        return JSONResponse(status_code=HTTP_401_UNAUTHORIZED)
+    
     gems = select_all_gems(lte, gte, type)
     return gems
 
 @gem_router.get('/gem/{id}', tags=['Gems'], summary="Retrieve a gem by ID")
-def gem(id: int):
+def gem(id: int, user=Depends(auth_handler.get_current_user)):
     """
     Retrieve information about a gem by its unique identifier.
 
@@ -69,6 +75,9 @@ def gem(id: int):
     }
     ```
     """
+    if not user.is_seller:
+        return JSONResponse(status_code=HTTP_401_UNAUTHORIZED)
+
     gem_found = select_gem(id)
     if not gem_found:
         error_response = {"detail": "Gem not found"}
@@ -78,7 +87,8 @@ def gem(id: int):
 @gem_router.post('/gems/create', tags=['Gems'], summary="Create a new gem")
 def create_gems(
     gem_pr: CreateGemProperties,
-    gem: CreateGem
+    gem: CreateGem,
+    user=Depends(auth_handler.get_current_user)
 ):
     """
     Create a new gem.
@@ -120,6 +130,10 @@ def create_gems(
         - 'H': Near-Colorless -
         - 'I': Near-Colorless --
     """
+
+    if not user.is_seller:
+        return JSONResponse(status_code=HTTP_401_UNAUTHORIZED)
+    
     try:
         created_gem = create_gem(gem_pr, gem)
         return created_gem
@@ -127,7 +141,7 @@ def create_gems(
         raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail='Invalid parameters sent to the database')
 
 @gem_router.put('/gems/{id}', tags=['Gems'], summary="Update Gem Availability")
-def update_gem(id: int, gem: UpdateGem):
+def update_gem(id: int, gem: UpdateGem, user=Depends(auth_handler.get_current_user)):
     """
     Update the availability status of a gem identified by its unique identifier.
 
@@ -172,6 +186,9 @@ def update_gem(id: int, gem: UpdateGem):
     }
     ```
     """
+    if not user.is_seller:
+        return JSONResponse(status_code=HTTP_401_UNAUTHORIZED)
+    
     try:
         gem_found_ = updating_gem(id, gem)
         return gem_found_
@@ -179,7 +196,7 @@ def update_gem(id: int, gem: UpdateGem):
         raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail='Invalid parameters sent to the database')
 
 @gem_router.delete('/gems/{id}',status_code=HTTP_204_NO_CONTENT, tags=['Gems'])
-def delete_gem(id: int):
+def delete_gem(id: int, user=Depends(auth_handler.get_current_user)):
     """
     Delete a gem identified by its unique identifier.
 
@@ -203,6 +220,9 @@ def delete_gem(id: int):
     HTTP/1.1 204 No Content
     ```
     """
+    if not user.is_seller:
+        return JSONResponse(status_code=HTTP_401_UNAUTHORIZED)
+
     try:
         delete = deleting_gem(id)
         return delete
