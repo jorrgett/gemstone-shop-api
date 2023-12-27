@@ -1,6 +1,23 @@
 services:
+  # A Docker web service
   - type: web
-    name: gemstone_shop_app
-    buildCommand: docker compose up --build
-    startCommand: docker compose up
-    runtime: automatic
+    name: gemstone-shop-api
+    runtime: docker
+    repo: https://github.com/jorrgett/gemstone-shop-api.git
+    region: oregon
+    plan: standard
+    branch: master
+    rootDir: .docker
+    healthCheckPath: /
+    envVars:
+      - key: REDIS_HOST
+        fromService:
+          type: redis
+          name: lightning
+          property: host # available properties are listed below
+      - key: REDIS_PORT
+        fromService:
+          type: redis
+          name: lightning
+          property: port
+      - fromGroup: conc-settings
