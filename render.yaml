@@ -4,8 +4,6 @@ services:
     name: gemstone-shop-api
     runtime: docker
     repo: https://github.com/jorrgett/gemstone-shop-api.git
-    region: oregon
-    branch: master
     rootDir: .docker
     healthCheckPath: /
     envVars:
