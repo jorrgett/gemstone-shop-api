@@ -1,8 +1,8 @@
 from typing import List, Optional
 from fastapi import APIRouter, Depends, HTTPException, Query
-from auth.auth import AuthHandler
-from models.gem_models import GemTypes
-from repos.gem_repository import *
+from app.auth.auth import AuthHandler
+from app.models.gem_models import GemTypes
+from app.repos.gem_repository import *
 from starlette.responses import JSONResponse
 from starlette.status import HTTP_204_NO_CONTENT, HTTP_404_NOT_FOUND, HTTP_400_BAD_REQUEST, HTTP_401_UNAUTHORIZED
 
