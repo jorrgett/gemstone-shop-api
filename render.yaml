@@ -2,8 +2,10 @@ services:
   # A Docker web service
   - type: web
     name: gemstone-shop-api
-    runtime: docker
-    repo: https://github.com/jorrgett/gemstone-shop-api.git
+    runtime: image
+
+    image:
+      url: docker.io/jorrgett/gemstone-shop-api:2.0.0
     rootDir: .docker
     healthCheckPath: /
     envVars:
