@@ -1,10 +1,10 @@
-from fastapi import APIRouter, HTTPException, Depends
+from fastapi import APIRouter, HTTPException, Depends, status, Body
 from starlette.responses import JSONResponse
 from starlette.status import HTTP_201_CREATED
-from auth.auth import AuthHandler
-from db.db import session
-from models.user_models import UserInput, User, UserLogin
-from repos.user_repository import select_all_users, find_user
+from app.auth.auth import AuthHandler
+from app.db.db import session
+from app.models.user_models import LoginInResponse, UserInput, User, UserLogin
+from app.repos.user_repository import login_response, select_all_users, find_user
 
 user_router = APIRouter()
 auth_handler = AuthHandler()
@@ -49,8 +49,15 @@ def register(user: UserInput):
 
     return JSONResponse(status_code=HTTP_201_CREATED, content=created_user)
 
-@user_router.post('/login', tags=['Users'])
-def login(user: UserLogin):
+@user_router.post(
+        path='/login',
+        tags=['Users'],
+        response_model=LoginInResponse,
+        status_code=status.HTTP_200_OK
+)
+def login(
+    user: UserLogin = Body(...) 
+):
     """
     Authenticate a user and generate an access token.
 
@@ -65,18 +72,8 @@ def login(user: UserLogin):
     Raises:
     - HTTPException 401: If the username or password is invalid.
     """
-    user_found = find_user(user.username)
-
-    if not user_found:
-        raise HTTPException(status_code=401, detail='Invalid username and/or password')
-    verified = auth_handler.verify_password(user.password, user_found.password)
-
-    if not verified:
-        raise HTTPException(status_code=401, detail='Invalid username and/or password')
-    
-    token = auth_handler.encode_token(user_found.username)
-
-    return {'token': token}
+    user_data = login_response(user, auth_handler)
+    return user_data
 
 @user_router.get('/users/me', tags=['Users'])
 def get_current_user(user: User = Depends(auth_handler.get_current_user)):

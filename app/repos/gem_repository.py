@@ -1,10 +1,10 @@
 from typing import Dict
 from fastapi.encoders import jsonable_encoder
-from db.db import engine
-from models.gem_models import Gem, GemProperties
+from app.db.db import engine
+from app.models.gem_models import Gem, GemProperties
 from sqlmodel import Session, select
-from populate import *
-from schemas.gem_schemas import *
+from app.populate import *
+from app.schemas.gem_schemas import *
 
 def select_all_gems(lte, gte, type):
     with Session(engine) as session:

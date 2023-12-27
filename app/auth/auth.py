@@ -1,15 +1,17 @@
 import datetime
+import jwt, secrets
+
+from passlib.context import CryptContext
 from fastapi import Security, HTTPException
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
-from passlib.context import CryptContext
-import jwt
 from starlette import status
-from repos.user_repository import find_user
+
+from app.repos.user_repository import find_user
 
 class AuthHandler:
     security = HTTPBearer()
     pwd_context = CryptContext(schemes=['bcrypt'])
-    secret = 'supersecret'
+    secret = secrets.token_hex(32)
 
     def get_password_hash(self, password):
         return self.pwd_context.hash(password)
