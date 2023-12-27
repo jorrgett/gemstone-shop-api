@@ -5,7 +5,6 @@ services:
     runtime: docker
     repo: https://github.com/jorrgett/gemstone-shop-api.git
     region: oregon
-    plan: standard
     branch: master
     rootDir: .docker
     healthCheckPath: /
