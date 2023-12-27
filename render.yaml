@@ -1,4 +1,5 @@
 services:
-  - name: gemstone_shop_app
+  - type: web
+    name: gemstone_shop_app
     buildCommand: docker compose up --build
     startCommand: docker compose up
