@@ -1,5 +1,9 @@
 services:
-  # A Docker web service
+  - type: postgres
+    name: gems-postgres
+    plan: data
+    region: oregon
+
   - type: web
     name: gemstone-shop-api
     runtime: docker
@@ -7,13 +11,32 @@ services:
     rootDir: .docker
     healthCheckPath: /
     envVars:
-      - key: REDIS_HOST
+      - key: DB_USER
         fromService:
-          type: redis
-          name: lightning
-          property: host # available properties are listed below
-      - key: REDIS_PORT
+          type: postgres
+          name: gems-postgres
+          property: user
+      - key: DB_PASSWORD
         fromService:
-          type: redis
-          name: lightning
-          property: port
+          type: postgres
+          name: gems-postgres
+          property: password
+      - key: DB_HOST
+        fromService:
+          type: postgres
+          name: gems-postgres
+          property: host
+      - key: DB_NAME
+        fromService:
+          type: postgres
+          name: gems-postgres
+          property: database
+
+      - key: MAIL_HOST
+        value: smtp.ethereal.email
+      - key: MAIL_USERNAME
+        value: jorgerafaeltorrestoro@gmail.com
+      - key: MAIL_PASSWORD
+        value: eevk bxhe turk xuit
+      - key: MAIL_PORT
+        value: "587"
