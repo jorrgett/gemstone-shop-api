@@ -1,9 +1,5 @@
 services:
-  - type: postgres
-    name: gems-postgres
-    plan: data
-    region: oregon
-
+  # A Docker web service
   - type: web
     name: gemstone-shop-api
     runtime: docker
@@ -12,25 +8,13 @@ services:
     healthCheckPath: /
     envVars:
       - key: DB_USER
-        fromService:
-          type: postgres
-          name: gems-postgres
-          property: user
+        value: gems_user
       - key: DB_PASSWORD
-        fromService:
-          type: postgres
-          name: gems-postgres
-          property: password
+        value: trOhcs6W67OARwm1rgyHWzCO2dQvBY1Z
       - key: DB_HOST
-        fromService:
-          type: postgres
-          name: gems-postgres
-          property: host
+        value: dpg-clu784a1hbls73eb0f00-a.oregon-postgres.render.com
       - key: DB_NAME
-        fromService:
-          type: postgres
-          name: gems-postgres
-          property: database
+        value: gems
 
       - key: MAIL_HOST
         value: smtp.ethereal.email
