@@ -1,9 +1,9 @@
 FROM python:3.11
 
 # Preparing the application to run inside the container
-WORKDIR /code
+WORKDIR /app
 
-COPY ./ /code
+COPY ./ /app/
 
 RUN pip install -r requirements.txt
 

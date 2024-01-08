@@ -18,7 +18,7 @@ def gems(
     lte: Optional[int] = Query(None, description="Filter gems with a value less than or equal to this"),
     gte: Optional[int] = Query(None, description="Filter gems with a value greater than or equal to this"),
     type: List[Optional[GemTypes]] = Query(None, description="Filter gems by type (diamond, ruby, emerald)"),
-    # user=Depends(auth_handler.get_current_user)
+    user=Depends(auth_handler.get_current_user)
 ):
     """
     Retrieve a list of gems based on specified criteria.
@@ -31,8 +31,8 @@ def gems(
     Returns:
     - List of gems that match the specified criteria.
     """
-    # if not user.is_seller:
-    #     return JSONResponse(status_code=HTTP_401_UNAUTHORIZED)
+    if not user.is_seller:
+        return JSONResponse(status_code=HTTP_401_UNAUTHORIZED)
     
     gems = select_all_gems(lte, gte, type)
     return gems
