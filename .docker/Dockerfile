@@ -3,7 +3,7 @@ FROM python:3.11
 # Preparing the application to run inside the container
 WORKDIR /app
 
-COPY ./ /app/
+COPY ./ /app
 
 RUN pip install -r requirements.txt
 

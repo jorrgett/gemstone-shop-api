@@ -5,8 +5,8 @@ services:
     runtime: image
 
     image:
-      url: docker.io/jorrgett/gemstone-shop-api:2.0.0
-    rootDir: .docker
+      url: docker.io/jorrgett/gemstone-shop-api:2.1.0
+    rootDir: app
     healthCheckPath: /
     envVars:
       - key: DB_USER
