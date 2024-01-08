@@ -2,7 +2,7 @@ version: "3.11"
 
 services:
   api:
-    build: .docker
+    build: .
     container_name: "gemstone_shop_app"
     restart: unless-stopped
     command: uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
