@@ -1,0 +1,33 @@
+services:
+  # A Docker web service
+  - type: web
+    name: gemstone-shop-api
+    runtime: docker
+    repo: https://github.com/jorrgett/gemstone-shop-api.git # optional
+    region: oregon # optional (defaults to oregon)
+    plan: standard # optional (defaults to starter instance type)
+    branch: master # optional (defaults to master)
+    rootDir: .
+    # dockerCommand: ./webdis.sh # optional (defaults to Dockerfile command)
+    # numInstances: 3 # optional (defaults to 1)
+    healthCheckPath: /
+    # registryCredential: # optional (defaults to no credential)
+      # fromRegistryCreds:
+      #   name: my-credentials
+    envVars:
+      - key: DB_USER
+        value: gems_user
+      - key: DB_PASSWORD
+        value: trOhcs6W67OARwm1rgyHWzCO2dQvBY1Z
+      - key: DB_HOST
+        value: dpg-clu784a1hbls73eb0f00-a.oregon-postgres.render.com
+      - key: DB_NAME
+        value: gems
+      - key: MAIL_HOST
+        value: smtp.ethereal.email
+      - key: MAIL_USERNAME
+        value: jorgerafaeltorrestoro@gmail.com
+      - key: MAIL_PASSWORD
+        value: eevk bxhe turk xuit
+      - key: MAIL_PORT
+        value: 587
