@@ -4,8 +4,6 @@ services:
     name: gemstone-shop-api
     runtime: docker
     repo: https://github.com/jorrgett/gemstone-shop-api.git # optional
-    region: oregon # optional (defaults to oregon)
-    branch: master # optional (defaults to master)
     rootDir: .
     # dockerCommand: ./webdis.sh # optional (defaults to Dockerfile command)
     # numInstances: 3 # optional (defaults to 1)
