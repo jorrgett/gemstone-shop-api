@@ -16,16 +16,12 @@ class GemTypes(str, Enum):
 class GemClarity(IntEnum):
     SI = 1
     VS = 2
-    VVS = 3
-    FL = 4
+    FL = 3
 
 class GemColor(str, Enum):
     D = 'D'
     E = 'E'
     G = 'G'
-    F = 'F'
-    H = 'H'
-    I = 'I'
 
 class GemProperties(SQLModel, table=True):
     id: Optional[int] = Field(primary_key=True)
@@ -40,6 +36,7 @@ class Gem(SQLModel, table=True):
     available: bool = True
     gem_type: Optional[GemTypes]
     image: str
+    quantity: int
     gem_properties_id: Optional[int] = Field(default=None, foreign_key='gemproperties.id')
     gem_properties: Optional[GemProperties] = Relationship(back_populates='gem')
     # seller_id: Optional[int] = Field(default=None, foreign_key='user.id')

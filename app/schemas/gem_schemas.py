@@ -3,6 +3,7 @@ from app.models.gem_models import *
 
 class CreateGem(BaseModel):
     available: bool
+    quantity: int
     gem_type: Optional[GemTypes]
 
 class CreateGemProperties(BaseModel):

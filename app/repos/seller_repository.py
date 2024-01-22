@@ -1,8 +1,11 @@
-from app.models.seller_models import MailBody
+from app.models.seller_models import MailBody, Seller
 from app.repos.config import HOST, USERNAME, PASSWORD, PORT
 from ssl import create_default_context
 from email.mime.text import MIMEText
 from smtplib import SMTP
+from sqlmodel import Session
+from app.db.db import engine
+from app.models.gem_models import Gem
 
 
 def send_mail(data: dict | None = None):
@@ -25,3 +28,23 @@ def send_mail(data: dict | None = None):
         return {"status": 200, "errors": None}
     except Exception as e:
         return {"status": 500, "errors": e}
+    
+def seller_gem(data: Seller):
+    with Session(engine) as session:
+        gem_found = session.get(Gem, data.id)
+        gem_found.quantity = gem_found.quantity - data.quantity
+
+        if gem_found.quantity == 0:
+            gem_found.available == False
+        
+        session.commit()
+        session.refresh(gem_found)
+
+        if gem_found.quantity == 0:
+            gem_found.available == False
+
+            session.commit()
+            session.refresh(gem_found)
+            
+        if gem_found:
+            return gem_found

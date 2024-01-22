@@ -44,7 +44,7 @@ def create_gem(gem_pr: CreateGemProperties, gem: CreateGem) -> Dict[str, any]:
         price = calculate_gem_price(gem, gem_pr)
         image = generate_image(gem)
 
-        gem_ = Gem(price=price, available=gem.available, gem_type=gem.gem_type, image=image, gem_properties=gem_properties)
+        gem_ = Gem(price=price, available=gem.available, gem_type=gem.gem_type, image=image, gem_properties=gem_properties, quantity=gem.quantity)
         session.add(gem_)
         session.commit()
 

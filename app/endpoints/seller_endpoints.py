@@ -1,7 +1,8 @@
 import smtplib
+from app.repos.seller_repository import seller_gem
 from fastapi import APIRouter
 from app.auth.auth import AuthHandler
-from app.models.seller_models import MailBody
+from app.models.seller_models import MailBody, Seller
 from email.message import EmailMessage
 
 from app.repos.config import PASSWORD, USERNAME
@@ -36,3 +37,13 @@ def send_email(data: MailBody):
         smtp.send_message(msg)
  
     return "email successfully sent"
+
+@seller_router.post(
+    path='/seller/gem',
+    status_code=201,
+    tags=['Seller'],
+    summary = 'Sell a gem'
+)
+def sell_gem(data: Seller):
+    sell = seller_gem(data)
+    return sell
