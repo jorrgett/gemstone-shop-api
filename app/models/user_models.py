@@ -5,7 +5,9 @@ from sqlmodel import SQLModel, Field
 
 class User(SQLModel, table=True):
     id: Optional[int] = Field(primary_key=True)
+    fullname: str = Field(max_length=256, min_length=3)
     username: str = Field(index=True)
+    profile_image: str = Field(max_length=256, min_length=3)
     password: str = Field(max_length=256, min_length=6)
     email: str
     created_at: datetime.datetime = datetime.datetime.now()
