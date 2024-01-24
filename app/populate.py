@@ -37,11 +37,11 @@ def calculate_gem_price(gem, gem_pr):
     return price
 
 def generate_image(gem):
-    image = 'https://i.pinimg.com/736x/97/a6/b3/97a6b3eaab6c39dc2a9a922338bf8c88.jpg'
+    image = 'https://res.cloudinary.com/brainlypf/image/upload/v1704900465/gemstone-profiles/ptjak76tycojmvxjlnqu.png'
     if gem.gem_type == 'EMERALD':
-        image = 'https://e7.pngegg.com/pngimages/1003/103/png-clipart-emerald-gemstone-beryl-emerald-rectangle-stone.png'
+        image = 'https://res.cloudinary.com/brainlypf/image/upload/v1704900465/gemstone-profiles/nuaxunb3oxdh4s6k0zhd.png'
     elif gem.gem_type == 'RUBY':
-        image = 'https://e7.pngegg.com/pngimages/181/855/png-clipart-ruby-ruby-thumbnail.png'
+        image = 'https://res.cloudinary.com/brainlypf/image/upload/v1704900462/gemstone-profiles/snxrxmhs6ugpqo3vzjvp.png'
 
     return image
 
@@ -55,7 +55,7 @@ def create_gem_props():
 
 def create_gem(gem_p):
     type = random.choice(GemTypes.list())
-    gem = Gem(price=1000, gem_properties_id=gem_p.id, gem_type=type, image='https://i.pinimg.com/736x/97/a6/b3/97a6b3eaab6c39dc2a9a922338bf8c88.jpg')
+    gem = Gem(price=1000, gem_properties_id=gem_p.id, gem_type=type, image='https://res.cloudinary.com/brainlypf/image/upload/v1704900465/gemstone-profiles/ptjak76tycojmvxjlnqu.png')
     image = generate_image(gem)
     gem.image = image
     price = calculate_gem_price(gem, gem_p)
