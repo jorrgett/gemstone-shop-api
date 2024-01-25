@@ -1,4 +1,6 @@
 from typing import Dict
+from fastapi import HTTPException
+from starlette.status import HTTP_404_NOT_FOUND
 from fastapi.encoders import jsonable_encoder
 from app.db.db import engine
 from app.models.gem_models import Gem, GemProperties
@@ -44,7 +46,7 @@ def create_gem(gem_pr: CreateGemProperties, gem: CreateGem) -> Dict[str, any]:
         price = calculate_gem_price(gem, gem_pr)
         image = generate_image(gem)
 
-        gem_ = Gem(price=price, available=gem.available, gem_type=gem.gem_type, image=image, gem_properties=gem_properties, quantity=gem.quantity)
+        gem_ = Gem(price=price, available=True, gem_type=gem.gem_type, image=image, gem_properties=gem_properties, quantity=gem.quantity)
         session.add(gem_)
         session.commit()
 
@@ -57,12 +59,18 @@ def create_gem(gem_pr: CreateGemProperties, gem: CreateGem) -> Dict[str, any]:
 def updating_gem(id, gem):
     with Session(engine) as session:
         gem_found = session.get(Gem, id)
-        update_item_encoded = jsonable_encoder(gem)
-        update_item_encoded.pop('id', None)
-        for key, val in update_item_encoded.items():
-            gem_found.__setattr__(key, val)
+
+        if gem_found is None:
+                raise HTTPException(status_code=HTTP_404_NOT_FOUND, detail=f'Gem with ID {id} not found')
+
+        gem_found.available = gem.available
+
+        if gem_found.available == False:
+            gem_found.quantity = 0
+
         session.commit()
         session.refresh(gem_found)
+
         return gem_found
     
 def deleting_gem(id):
