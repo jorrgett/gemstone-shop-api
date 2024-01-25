@@ -1,9 +1,10 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.endpoints.gem_endpoints import gem_router
+from app.endpoints.security_endpoints import security_router
 from app.endpoints.user_endpoints import user_router
 from app.endpoints.seller_endpoints import seller_router
+from app.endpoints.gem_endpoints import gem_router
 from app.models.gem_models import *
 
 app = FastAPI()
@@ -16,6 +17,7 @@ app.add_middleware(
         allow_headers=["*"],
     )
 
+app.include_router(security_router)
 app.include_router(user_router)
-app.include_router(gem_router)
 app.include_router(seller_router)
+app.include_router(gem_router)
