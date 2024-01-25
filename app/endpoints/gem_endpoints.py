@@ -120,15 +120,11 @@ def create_gems(
     - **Clarity Rating:**
         - 1 (SI): Slightly Included
         - 2 (VS): Very Slightly Included
-        - 3 (VVS): Very, Very Slightly Included
-        - 4 (FL): Flawless
+        - 3 (FL): Flawless
     - **Color Grade:**
-        - 'D': Colorless ++
-        - 'E': Colorless +
-        - 'F': Colorless
-        - 'G': Near-Colorless 
-        - 'H': Near-Colorless -
-        - 'I': Near-Colorless --
+        - 'D': Colorless +
+        - 'E': Colorless
+        - 'G': Colorless -
     """
 
     if not user.is_seller:
@@ -189,11 +185,10 @@ def update_gem(id: int, gem: UpdateGem, user=Depends(auth_handler.get_current_us
     if not user.is_seller:
         return JSONResponse(status_code=HTTP_401_UNAUTHORIZED)
     
-    try:
-        gem_found_ = updating_gem(id, gem)
-        return gem_found_
-    except Exception as e:
-        raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail='Invalid parameters sent to the database')
+    if gem.available == True:
+        raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail='This gem is no longer available')
+    
+    return updating_gem(id, gem)
 
 @gem_router.delete('/gems/{id}',status_code=HTTP_204_NO_CONTENT, tags=['Gems'])
 def delete_gem(id: int, user=Depends(auth_handler.get_current_user)):

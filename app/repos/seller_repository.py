@@ -1,3 +1,4 @@
+from fastapi import HTTPException
 from app.models.seller_models import MailBody, Seller
 from app.repos.config import HOST, USERNAME, PASSWORD, PORT
 from ssl import create_default_context
@@ -32,19 +33,17 @@ def send_mail(data: dict | None = None):
 def seller_gem(data: Seller):
     with Session(engine) as session:
         gem_found = session.get(Gem, data.id)
-        gem_found.quantity = gem_found.quantity - data.quantity
 
-        if gem_found.quantity == 0:
-            gem_found.available == False
-        
-        session.commit()
-        session.refresh(gem_found)
+        if gem_found:
+            if data.quantity > gem_found.quantity:
+                raise HTTPException(status_code=400, detail='Quantity to sell exceeds available quantity')
 
-        if gem_found.quantity == 0:
-            gem_found.available == False
+            gem_found.quantity -= data.quantity
+
+            if gem_found.quantity == 0:
+                gem_found.available = False
 
             session.commit()
             session.refresh(gem_found)
-            
-        if gem_found:
-            return gem_found
+
+        return gem_found
